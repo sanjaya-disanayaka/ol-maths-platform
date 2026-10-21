@@ -13,3 +13,23 @@ model User {
   password  String
   createdAt DateTime @default(now())
 }
+
+model Course {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  createdAt   DateTime @default(now())
+
+  lessons     Lesson[]
+}
+
+model Lesson {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String
+  order     Int
+  createdAt DateTime @default(now())
+
+  courseId  Int
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+}

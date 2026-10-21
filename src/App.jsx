@@ -5,9 +5,9 @@ import Courses from './pages/Courses'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Profile from './pages/profile'
+import CourseDetails from './pages/CourseDetails'
 
 import ProtectedRoute from './ProtectedRoute'
-
 import { AuthProvider } from './context/AuthContext'
 
 function App() {
@@ -31,6 +31,11 @@ function App() {
                 <Profile />
               </ProtectedRoute>
             }
+          />
+
+          <Route
+            path="/courses/:courseName"
+            element={<CourseDetails />}
           />
 
         </Routes>

@@ -156,6 +156,76 @@ app.get('/api/me', authMiddleware, async (req, res) => {
         })
     }
 })
+
+app.get('/api/courses', async (req, res) => {
+    try {
+        const courses = await prisma.course.findMany({
+            include: {
+                lessons: {
+                    orderBy: {
+                        order: 'asc'
+                    }
+                }
+            },
+            orderBy: {
+                id: 'asc'
+            }
+        })
+
+        res.json({
+            courses
+        })
+
+    } catch (error) {
+        console.error('Get courses error:', error)
+
+        res.status(500).json({
+            message: 'Something went wrong!'
+        })
+    }
+})
+
+app.get('/api/courses/:id', async (req, res) => {
+    try {
+        const courseId = parseInt(req.params.id)
+
+        if (isNaN(courseId)) {
+            return res.status(400).json({
+                message: 'Invalid course ID'
+            })
+        }
+
+        const course = await prisma.course.findUnique({
+            where: {
+                id: courseId
+            },
+            include: {
+                lessons: {
+                    orderBy: {
+                        order: 'asc'
+                    }
+                }
+            }
+        })
+
+        if (!course) {
+            return res.status(404).json({
+                message: 'Course not found'
+            })
+        }
+
+        res.json({
+            course
+        })
+
+    } catch (error) {
+        console.error('Get course error:', error)
+
+        res.status(500).json({
+            message: 'Something went wrong!'
+        })
+    }
+})
 const PORT = 5001
 
 app.listen(PORT, () => {
